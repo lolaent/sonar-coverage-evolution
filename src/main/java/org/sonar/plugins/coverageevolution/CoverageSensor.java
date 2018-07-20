@@ -95,9 +95,10 @@ public class CoverageSensor implements Sensor, BatchComponent {
       // The API returns the coverage rounded.
       // So we can only report anything if the rounded value has changed,
       // otherwise we could report false positives.
-      LOGGER.debug("Previous/current file coverage on {}: {} / {}",
+      LOGGER.info("Previous/current file coverage on {}: {} / {}",
           fileResource.getPath(), previousCoverage, coverage);
       if (roundedPercentageGreaterThan(previousCoverage, coverage)) {
+        LOGGER.info("Creating file coverage issue for {}", file);
         addIssue(file, coverage, previousCoverage);
       }
     }
@@ -106,10 +107,10 @@ public class CoverageSensor implements Sensor, BatchComponent {
   private void analyseRootProject(Project module) {
     Double previousProjectCoverage = sonar.getMeasureValue(module, module, CoreMetrics.LINE_COVERAGE);
     Double projectCoverage = coverageProjectStore.getProjectCoverage();
-    LOGGER.debug("Previous/current project-wide coverage: {} / {}", previousProjectCoverage,
+    LOGGER.info("Previous/current project-wide coverage: {} / {}", previousProjectCoverage,
         projectCoverage);
     if (roundedPercentageGreaterThan(previousProjectCoverage, projectCoverage)) {
-      LOGGER.debug("Creating global coverage issue for {}", module);
+      LOGGER.info("Creating global coverage issue for {}", module);
       addIssue(module, projectCoverage, previousProjectCoverage);
     }
   }
